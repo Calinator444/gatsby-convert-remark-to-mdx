@@ -25,9 +25,11 @@
     "prismjs": "^1.29.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "remark-gfm": "^3.0.1"
+    "remark-gfm": "^3.0.1",
+    "tinacms": "^2.3.0"
   },
   "devDependencies": {
+    "@tinacms/cli": "^1.6.10",
     "prettier": "^2.8.8"
   },
   "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
@@ -41,7 +43,7 @@
   },
   "scripts": {
     "build": "gatsby build",
-    "develop": "gatsby develop",
+    "develop": "npx tinacms dev -c \"gatsby develop\"",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "start": "gatsby develop",
     "serve": "gatsby serve",

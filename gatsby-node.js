@@ -3,10 +3,14 @@
  *
  * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/
  */
+const { parseMDX } = require("@tinacms/mdx")
 
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
-
+const express = require("express")
+exports.onCreateDevServer = ({ app }) => {
+  app.use("/admin", express.static("public/admin"))
+}
 // Define the template for blog post
 const blogPost = path.resolve(`./src/templates/blog-post.js`)
 
@@ -68,12 +72,32 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 /**
  * @type {import('gatsby').GatsbyNode['onCreateNode']}
  */
+
+const imageCallback = url => {
+  return url.replace(".", "/images")
+}
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
+  // @ts-ignore no access to the rich-text type from this package
   if (node.internal.type === `Mdx`) {
     const value = createFilePath({ node, getNode })
-
+    createNodeField({
+      name: `tinaMarkdown`,
+      node,
+      value: JSON.stringify(
+        parseMDX(
+          node.body,
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+          imageCallback
+        )
+      ),
+    })
     createNodeField({
       name: `slug`,
       node,

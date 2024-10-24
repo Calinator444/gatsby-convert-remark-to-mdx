@@ -1,5 +1,6 @@
 import { Link, graphql } from "gatsby"
 import * as React from "react"
+import { TinaMarkdown } from "tinacms/dist/rich-text"
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -8,8 +9,9 @@ import Seo from "../components/seo"
 const BlogPostTemplate = ({
   data: { previous, next, site, mdx: post },
   location,
-  children,
 }) => {
+  const tinaMarkdownContent = JSON.parse(post.fields.tinaMarkdown)
+  console.log(tinaMarkdownContent)
   const siteTitle = site.siteMetadata?.title || `Title`
 
   return (
@@ -23,7 +25,8 @@ const BlogPostTemplate = ({
           <h1 itemProp="headline">{post.frontmatter.title}</h1>
           <p>{post.frontmatter.date}</p>
         </header>
-        {children}
+
+        <TinaMarkdown content={tinaMarkdownContent} />
         <hr />
         <footer>
           <Bio />
@@ -83,6 +86,9 @@ export const pageQuery = graphql`
     }
     mdx(id: { eq: $id }) {
       id
+      fields {
+        tinaMarkdown
+      }
       excerpt(pruneLength: 160)
       frontmatter {
         title
